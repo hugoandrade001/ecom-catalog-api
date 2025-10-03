@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Serviço 1: PostgreSQL
+  postgres:
+    image: postgres:15-alpine          # Imagem oficial do PostgreSQL
+    container_name: flask_postgres
+    environment:
+      POSTGRES_USER: admin             # Usuário do banco
+      POSTGRES_PASSWORD: admin123      # Senha do banco
+      POSTGRES_DB: products_db         # Nome do banco
+    ports:
+      - "5432:5432"                    # Porta exposta (host:container)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persiste os dados
+    networks:
+      - app_network
+
+  # Serviço 2: Redis
+  redis:
+    image: redis:7-alpine              # Imagem oficial do Redis
+    container_name: flask_redis
+    ports:
+      - "6379:6379"                    # Porta padrão do Redis
+    networks:
+      - app_network
+
+# Volumes (para persistir dados)
+volumes:
+  postgres_data:
+
+# Rede para comunicação entre containers
+networks:
+  app_network:
+    driver: bridge
